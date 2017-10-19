@@ -77,6 +77,7 @@ def print_room_items(room):
 
 
 def print_inventory_items(items):
+    global inventory
     """This function takes a list of inventory items and displays it nicely, in a
     manner similar to print_room_items(). The only difference is in formatting:
     print "You have ..." instead of "There is ... here.". For example:
@@ -86,8 +87,8 @@ def print_inventory_items(items):
     <BLANKLINE>
 
     """
-    names = list_of_items(items)
-    print ('You have ' + names + '.\n')
+
+    print ('You have ' + list_of_items(items) + '.\n')
 
 def print_room(room):
     """This function takes a room as an input and nicely displays its name
@@ -123,6 +124,7 @@ def print_room(room):
     <BLANKLINE>
     There is a pack of biscuits, a student handbook here.
     <BLANKLINE>
+
 
     >>> print_room(rooms["Admins"])
     <BLANKLINE>
@@ -191,7 +193,6 @@ def print_menu(exits, room_items, inv_items):
     "DROP <ITEM ID> to drop <item name>."
 
     For example, the menu of actions available at the Reception may look like this:
-
     You can:
     GO EAST to your personal tutor's office.
     GO WEST to the parking lot.
@@ -253,9 +254,7 @@ def execute_go(direction):
 
     exits = player.current_room['exits']
     if is_valid_exit(exits, direction):
-        new_room = rooms[exits[direction]]
-        print('Moving into ' + new_room['name'])
-        move(new_room)
+        player.current_room = move(exits,direction)
     else:
         print('Cannot go there')
 
@@ -305,6 +304,7 @@ def execute_drop(item_id):
 
 
 def execute_command(command):
+
     """This function takes a command (a list of words as returned by
     normalise_input) and, depending on the type of action (the first word of
     the command: "go", "take", or "drop"), executes either execute_go,
@@ -365,7 +365,7 @@ def menu(exits, room_items, inv_items):
 
 
 
-def move(room):
+def move(exits, direction):
     """This function returns the room into which the player will move if, from a
     dictionary "exits" of avaiable exits, they choose to move towards the exit
     with the name given by "direction". For example:
@@ -379,7 +379,7 @@ def move(room):
     """
 
     # Next room to go to
-    player.current_room = room
+    return rooms[exits[direction]]
 
 
 # This is the entry point of our program
